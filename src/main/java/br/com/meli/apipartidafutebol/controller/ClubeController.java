@@ -1,6 +1,7 @@
 package br.com.meli.apipartidafutebol.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,5 +13,8 @@ public class ClubeController {
     public String getMessage(){
         return "Clube de Futebol";
     }
+
+    @PostMapping
+    public void cadastrar(){}
 
 }

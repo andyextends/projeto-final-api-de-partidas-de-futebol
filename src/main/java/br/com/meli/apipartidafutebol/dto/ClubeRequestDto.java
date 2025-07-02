@@ -1,5 +1,6 @@
 package br.com.meli.apipartidafutebol.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ClubeRequestDto {
@@ -8,16 +9,16 @@ public class ClubeRequestDto {
 
   private String estado;
 
-  private LocalDateTime dataCadastro;
+  private LocalDate dataCriacao;
 
   private Boolean status;
 
-    public LocalDateTime getDataCadastro() {
-        return dataCadastro;
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
     }
 
-    public void setDataCadastro(LocalDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
+    public void setDataCriacao(LocalDate dataCriacao){
+        this.dataCriacao = dataCriacao;
     }
 
     public String getEstado() {

@@ -1,9 +1,7 @@
 package br.com.meli.apipartidafutebol.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import br.com.meli.apipartidafutebol.dto.ClubeRequestDto;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("clube")
@@ -15,6 +13,8 @@ public class ClubeController {
     }
 
     @PostMapping
-    public void cadastrar(){}
+    public ClubeRequestDto cadastrar(@RequestBody ClubeRequestDto clubeRequestDto) {
+        return clubeRequestDto;
+    }
 
 }

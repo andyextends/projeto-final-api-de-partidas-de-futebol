@@ -1,22 +1,36 @@
-package br.com.meli.apipartidafutebol.dto;
+package br.com.meli.apipartidafutebol.model;
 
-import jakarta.validation.constraints.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
-
-public class ClubeRequestDto {
-    @NotBlank(message = "O nome do clube é obrigatório.")
-    @Size(min = 2, message = "O nome deve ter pelo menos 2 letras.")
+@Entity
+@Table(name = "clubes")
+public class Clube {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, length = 100)
     private String nome;
-    @NotBlank(message = "A sigla do estado é obrigatória.")
-    @Pattern(regexp = "^[A-Z]{2}$", message = "A sigla do estado deve conter exatamente 2 letras maiúsculas.")
+    @Column(nullable = false, length = 2)
     private String siglaEstado;
-    @NotNull(message = "A data de criação é obrigatória.")
-    @PastOrPresent(message = "A data de criação não pode ser no futuro.")
+    @Column(nullable = false)
     private LocalDate dataCriacao;
-    @NotNull(message = "O campo 'ativo' é obrigatório.")
+    @Column(nullable = false)
     private Boolean ativo;
+    // Construtor padrão
+    public Clube() {}
+    // Construtor completo
+    public Clube(String nome, String siglaEstado, LocalDate dataCriacao, Boolean ativo) {
+        this.nome = nome;
+        this.siglaEstado = siglaEstado;
+        this.dataCriacao = dataCriacao;
+        this.ativo = ativo;
+    }
     // Getters e Setters
+    public Long getId() {
+        return id;
+    }
     public String getNome() {
         return nome;
     }
@@ -41,4 +55,5 @@ public class ClubeRequestDto {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
+
 }

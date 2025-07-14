@@ -19,14 +19,11 @@ public class ClubeController {
         this.clubeService = clubeService;
     }
 
-    //@GetMapping
-   // public String getMessage(){
-    //    return "Clube de Futebol";
-   // }
 
     @PostMapping
-    public ClubeRequestDto cadastrar(@RequestBody ClubeRequestDto clubeRequestDto) {
-        return clubeRequestDto;
+    @ResponseStatus(HttpStatus.CREATED)
+    public ClubeResponseDto cadastrar(@RequestBody @Valid ClubeRequestDto clubeRequestDto) {
+        return clubeService.salvar(clubeRequestDto);
     }
     
     @GetMapping

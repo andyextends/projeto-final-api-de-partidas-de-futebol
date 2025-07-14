@@ -33,8 +33,34 @@ public class PartidaService {
         if (mandante.getId().equals(visitante.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Clube mandante e visitante devem ser diferentes.");
         }
+        if (!mandante.getAtivo() || !visitante.getAtivo()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ambos os clubes devem estar ativos.");
+        }
+        if (dto.getDataHora().isBefore(mandante.getDataCriacao().atStartOfDay()) ||
+                dto.getDataHora().isBefore(visitante.getDataCriacao().atStartOfDay())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A data da partida não pode ser anterior à criação dos clubes.");
+        }
         Estadio estadio = estadioRepository.findById(dto.getEstadioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estádio não encontrado."));
+        // Verifica se já há partida no mesmo estádio e dia
+        boolean estadioOcupado = partidaRepository.findAll().stream()
+                .anyMatch(p -> p.getEstadio().getId().equals(estadio.getId())
+                        && p.getDataHora().toLocalDate().equals(dto.getDataHora().toLocalDate()));
+        if (estadioOcupado) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma partida agendada neste estádio neste dia.");
+        }
+        // Verifica intervalo mínimo de 48h para o mandante
+        boolean intervaloInvalidoMandante = partidaRepository.findAll().stream()
+                .anyMatch(p -> (p.getClubeMandante().getId().equals(mandante.getId())
+                        || p.getClubeVisitante().getId().equals(mandante.getId()))
+                        && Math.abs(p.getDataHora().until(dto.getDataHora(), java.time.temporal.ChronoUnit.HOURS)) < 48);
+        boolean intervaloInvalidoVisitante = partidaRepository.findAll().stream()
+                .anyMatch(p -> (p.getClubeMandante().getId().equals(visitante.getId())
+                        || p.getClubeVisitante().getId().equals(visitante.getId()))
+                        && Math.abs(p.getDataHora().until(dto.getDataHora(), java.time.temporal.ChronoUnit.HOURS)) < 48);
+        if (intervaloInvalidoMandante || intervaloInvalidoVisitante) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Um dos clubes já possui partida marcada com menos de 48h de intervalo.");
+        }
         Partida partida = new Partida(
                 mandante,
                 visitante,

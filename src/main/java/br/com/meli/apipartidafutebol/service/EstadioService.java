@@ -44,7 +44,7 @@ public class EstadioService {
         return estadioRepository.findAll()
                 .stream()
                 .map(EstadioResponseDto::new)
-                .collect(Collectors.toList());
+                .toList();
     }
     @Transactional
     public EstadioResponseDto atualizar(Long id, EstadioRequestDto dto) {

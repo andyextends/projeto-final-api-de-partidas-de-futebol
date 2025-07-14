@@ -41,7 +41,7 @@ public class ClubeService {
 
     }
     public List<ClubeResponseDto> listarTodosClubes(){
-        return clubeRepository.findAll().stream().map(ClubeResponseDto::new).collect(Collectors.toList());
+        return clubeRepository.findAll().stream().map(ClubeResponseDto::new).toList();
 
     }
 

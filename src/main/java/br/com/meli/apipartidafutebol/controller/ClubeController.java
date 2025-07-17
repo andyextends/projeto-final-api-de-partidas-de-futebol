@@ -4,7 +4,11 @@ import br.com.meli.apipartidafutebol.dto.ClubeRequestDto;
 import br.com.meli.apipartidafutebol.dto.ClubeResponseDto;
 import br.com.meli.apipartidafutebol.service.ClubeService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +49,18 @@ public class ClubeController {
     public void deletar(@PathVariable Long id) {
         clubeService.deletar(id);
     }
+
+    @GetMapping("/filtro")
+    public ResponseEntity<Page<ClubeResponseDto>> filtrarClubes(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String siglaEstado,
+            @RequestParam(required = false) Boolean ativo,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable
+    ) {
+
+        return ResponseEntity.ok(clubeService.filtrarClubes(nome,siglaEstado,ativo, pageable));
+    }
+
 
 
 

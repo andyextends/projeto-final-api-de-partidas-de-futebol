@@ -1,6 +1,7 @@
 package br.com.meli.apipartidafutebol.service;
 import br.com.meli.apipartidafutebol.dto.PartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaResponseDto;
+import br.com.meli.apipartidafutebol.exception.*;
 import br.com.meli.apipartidafutebol.model.Clube;
 import br.com.meli.apipartidafutebol.model.Estadio;
 import br.com.meli.apipartidafutebol.model.Partida;
@@ -9,9 +10,7 @@ import br.com.meli.apipartidafutebol.repository.EstadioRepository;
 import br.com.meli.apipartidafutebol.repository.PartidaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -30,14 +29,16 @@ public class PartidaService {
         Clube visitante = buscarClube(dto.getClubeVisitanteId(), "visitante");
         Estadio estadio = buscarEstadio(dto.getEstadioId());
         validarRegrasDeNegocio(mandante, visitante, estadio, dto.getDataHora());
-        Partida partida = new Partida(mandante, visitante, estadio,
-                dto.getDataHora(), dto.getPlacarMandante(), dto.getPlacarVisitante());
+        Partida partida = new Partida(
+                mandante, visitante, estadio,
+                dto.getDataHora(), dto.getPlacarMandante(), dto.getPlacarVisitante()
+        );
         return new PartidaResponseDto(partidaRepository.save(partida));
     }
     @Transactional
     public PartidaResponseDto atualizar(Long id, PartidaRequestDto dto) {
         Partida partida = partidaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Partida não encontrada."));
+                .orElseThrow(() -> new PartidaNaoEncontradaException("Partida não encontrada."));
         Clube mandante = buscarClube(dto.getClubeMandanteId(), "mandante");
         Clube visitante = buscarClube(dto.getClubeVisitanteId(), "visitante");
         Estadio estadio = buscarEstadio(dto.getEstadioId());
@@ -58,23 +59,23 @@ public class PartidaService {
     }
     public PartidaResponseDto buscarPorId(Long id) {
         Partida partida = partidaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Partida não encontrada."));
+                .orElseThrow(() -> new PartidaNaoEncontradaException("Partida não encontrada."));
         return new PartidaResponseDto(partida);
     }
     @Transactional
     public void deletar(Long id) {
         Partida partida = partidaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Partida não encontrada."));
+                .orElseThrow(() -> new PartidaNaoEncontradaException("Partida não encontrada."));
         partidaRepository.delete(partida);
     }
-
+    // ===== Métodos auxiliares =====
     private Clube buscarClube(Long id, String tipo) {
         return clubeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Clube " + tipo + " não encontrado."));
+                .orElseThrow(() -> new ClubeNaoEncontradoException("Clube " + tipo + " não encontrado."));
     }
     private Estadio buscarEstadio(Long id) {
         return estadioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estadio não encontrado."));
+                .orElseThrow(() -> new EstadioNaoEncontradoException("Estádio não encontrado."));
     }
     private void validarRegrasDeNegocio(Clube mandante, Clube visitante, Estadio estadio, LocalDateTime dataHora) {
         validarClubesDiferentes(mandante, visitante);
@@ -85,19 +86,18 @@ public class PartidaService {
     }
     private void validarClubesDiferentes(Clube mandante, Clube visitante) {
         if (mandante.getId().equals(visitante.getId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Clube mandante e visitante devem ser diferentes.");
+            throw new ClubesIguaisException("Clube mandante e visitante devem ser diferentes.");
         }
     }
     private void validarClubesAtivos(Clube mandante, Clube visitante) {
         if (!mandante.getAtivo() || !visitante.getAtivo()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ambos os clubes devem estar ativos.");
+            throw new ClubesInativosException("Ambos os clubes devem estar ativos.");
         }
     }
     private void validarDataPartidaVsCriacaoClubes(Clube mandante, Clube visitante, LocalDateTime dataHora) {
         if (dataHora.isBefore(mandante.getDataCriacao().atStartOfDay()) ||
                 dataHora.isBefore(visitante.getDataCriacao().atStartOfDay())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "A data da partida não pode ser anterior a  criação dos clubes.");
+            throw new DataInvalidaException("A data da partida não pode ser anterior à criação dos clubes.");
         }
     }
     private void validarEstadioDisponivel(Estadio estadio, LocalDateTime dataHora) {
@@ -105,7 +105,7 @@ public class PartidaService {
                 .anyMatch(p -> p.getEstadio().getId().equals(estadio.getId())
                         && p.getDataHora().toLocalDate().equals(dataHora.toLocalDate()));
         if (ocupado) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma partida agendada neste Estadio neste dia.");
+            throw new EstadioOcupadoException("Já existe uma partida agendada neste estádio neste dia.");
         }
     }
     private void validarIntervaloEntrePartidas(Clube mandante, Clube visitante, LocalDateTime dataHora) {
@@ -117,7 +117,16 @@ public class PartidaService {
                                 p.getClubeVisitante().getId().equals(visitante.getId())
                 ) && Math.abs(p.getDataHora().until(dataHora, ChronoUnit.HOURS)) < 48);
         if (intervaloInvalido) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Um dos clubes já possui partida com menos de 48h de intervalo.");
+            throw new IntervaloInvalidoException("Um dos clubes já possui partida com menos de 48h de intervalo.");
         }
     }
 }
+
+
+
+
+
+
+
+
+

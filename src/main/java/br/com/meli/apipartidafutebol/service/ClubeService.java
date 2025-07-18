@@ -1,10 +1,13 @@
 package br.com.meli.apipartidafutebol.service;
 import br.com.meli.apipartidafutebol.dto.ClubeRequestDto;
 import br.com.meli.apipartidafutebol.dto.ClubeResponseDto;
+import br.com.meli.apipartidafutebol.dto.RetrospectoClubeDto;
 import br.com.meli.apipartidafutebol.exception.ClubeNaoEncontradoException;
 import br.com.meli.apipartidafutebol.exception.ClubesIguaisException;
 import br.com.meli.apipartidafutebol.model.Clube;
+import br.com.meli.apipartidafutebol.model.Partida;
 import br.com.meli.apipartidafutebol.repository.ClubeRepository;
+import br.com.meli.apipartidafutebol.repository.PartidaRepository;
 import br.com.meli.apipartidafutebol.specification.ClubeSpecification;
 import br.com.meli.apipartidafutebol.dto.FiltroClubeRequestDto;
 import jakarta.transaction.Transactional;
@@ -20,6 +23,12 @@ import org.springframework.data.domain.Pageable;
 public class ClubeService {
     @Autowired
     private ClubeRepository clubeRepository;
+    private PartidaRepository partidaRepository;
+
+    public ClubeService(ClubeRepository clubeRepository, PartidaRepository partidaRepository) {
+        this.clubeRepository = clubeRepository;
+        this.partidaRepository = partidaRepository;
+    }
     @Transactional
     public ClubeResponseDto salvar(ClubeRequestDto dto) {
         verificarClubeExistente(dto.getNome(), dto.getSiglaEstado());
@@ -71,6 +80,33 @@ public class ClubeService {
         return clubeRepository.findAll(spec, pageable)
                 .map(ClubeResponseDto::new);
     }
+    public RetrospectoClubeDto obterRetrospecto(Long clubeId) {
+        Clube clube = clubeRepository.findById(clubeId)
+                .orElseThrow(() -> new ClubeNaoEncontradoException("Clube não encontrado."));
+        List<Partida> partidas = partidaRepository.findByClubeMandanteIdOrClubeVisitanteId(clubeId, clubeId);
+        int vitorias = 0, empates = 0, derrotas = 0, golsFeitos = 0, golsSofridos = 0;
+        for (Partida p : partidas) {
+            boolean mandante = p.getClubeMandante().getId().equals(clubeId);
+            int golsPro = mandante ? p.getPlacarMandante() : p.getPlacarVisitante();
+            int golsContra = mandante ? p.getPlacarVisitante() : p.getPlacarMandante();
+            golsFeitos += golsPro;
+            golsSofridos += golsContra;
+            if (golsPro > golsContra) vitorias++;
+            else if (golsPro == golsContra) empates++;
+            else derrotas++;
+        }
+        return new RetrospectoClubeDto(clube.getId(), clube.getNome(), vitorias, empates, derrotas, golsFeitos, golsSofridos);
+    }
+
+
+
+
+
+
+
+
+
+
 }
 
 

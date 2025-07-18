@@ -2,6 +2,7 @@ package br.com.meli.apipartidafutebol.controller;
 
 import br.com.meli.apipartidafutebol.dto.ClubeRequestDto;
 import br.com.meli.apipartidafutebol.dto.ClubeResponseDto;
+import br.com.meli.apipartidafutebol.dto.RetrospectoClubeDto;
 import br.com.meli.apipartidafutebol.service.ClubeService;
 import br.com.meli.apipartidafutebol.dto.FiltroClubeRequestDto;
 import jakarta.validation.Valid;
@@ -59,6 +60,11 @@ public class ClubeController {
     ) {
         Page<ClubeResponseDto> resultado = clubeService.filtrarClubes(filtro, pageable);
         return ResponseEntity.ok(resultado);
+    }
+
+    @GetMapping("/{id}/retrospecto")
+    public ResponseEntity<RetrospectoClubeDto> retrospecto(@PathVariable Long id) {
+        return ResponseEntity.ok(clubeService.obterRetrospecto(id));
     }
 
 

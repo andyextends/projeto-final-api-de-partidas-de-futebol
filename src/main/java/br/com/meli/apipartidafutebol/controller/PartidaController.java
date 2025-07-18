@@ -1,10 +1,13 @@
 package br.com.meli.apipartidafutebol.controller;
 
+import br.com.meli.apipartidafutebol.dto.FiltroPartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaResponseDto;
 import br.com.meli.apipartidafutebol.service.PartidaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -40,5 +43,9 @@ public class PartidaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
         partidaService.deletar(id);
+    }
+    @PostMapping("/filtrar")
+    public Page<PartidaResponseDto> filtrarPartidas(@RequestBody FiltroPartidaRequestDto filtro, Pageable pageable) {
+        return partidaService.filtrarPartidas(filtro, pageable);
     }
 }

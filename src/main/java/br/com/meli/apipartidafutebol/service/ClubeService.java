@@ -5,14 +5,16 @@ import br.com.meli.apipartidafutebol.exception.ClubeNaoEncontradoException;
 import br.com.meli.apipartidafutebol.exception.ClubesIguaisException;
 import br.com.meli.apipartidafutebol.model.Clube;
 import br.com.meli.apipartidafutebol.repository.ClubeRepository;
+import br.com.meli.apipartidafutebol.specification.ClubeSpecification;
+import br.com.meli.apipartidafutebol.dto.FiltroClubeRequestDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import br.com.meli.apipartidafutebol.specification.ClubeFiltroSpecification;
+
 
 @Service
 public class ClubeService {
@@ -63,14 +65,15 @@ public class ClubeService {
         }
 
     }
-    public Page<ClubeResponseDto> filtrarClubes(String nome, String siglaEstado, Boolean ativo, Pageable pageable) {
-        Specification<Clube> spec = Specification.where(ClubeFiltroSpecification.nomeContem(nome))
-                .and(ClubeFiltroSpecification.siglaEstadoIgual(siglaEstado))
-                .and(ClubeFiltroSpecification.ativoIgual(ativo));
+
+    public Page<ClubeResponseDto> filtrarClubes(FiltroClubeRequestDto filtro, Pageable pageable) {
+        Specification<Clube> spec = ClubeSpecification.comFiltros(filtro);
         return clubeRepository.findAll(spec, pageable)
                 .map(ClubeResponseDto::new);
     }
 }
+
+
 
 
 

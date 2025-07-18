@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import br.com.meli.apipartidafutebol.dto.FiltroPartidaRequestDto;
+import br.com.meli.apipartidafutebol.specification.PartidaSpecification;
+
 @Service
 public class PartidaService {
     @Autowired
@@ -120,6 +125,18 @@ public class PartidaService {
             throw new IntervaloInvalidoException("Um dos clubes já possui partida com menos de 48h de intervalo.");
         }
     }
+
+    public Page<PartidaResponseDto> filtrarPartidas(FiltroPartidaRequestDto filtro, Pageable pageable) {
+        return partidaRepository.findAll(PartidaSpecification.filtrar(filtro), pageable)
+                .map(PartidaResponseDto::new);
+    }
+
+
+
+
+
+
+
 }
 
 

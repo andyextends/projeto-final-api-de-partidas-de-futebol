@@ -4,6 +4,10 @@ import br.com.meli.apipartidafutebol.dto.FiltroPartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaResponseDto;
 import br.com.meli.apipartidafutebol.service.PartidaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,39 +15,66 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+@Tag(name = "Partida", description = "Operações relacionadas as partidas de futebol")
 @RestController
 @RequestMapping("/partidas")
 public class PartidaController {
     @Autowired
     private PartidaService partidaService;
-    // POST /partidas
+    @Operation(summary = "Cadastrar uma nova partida")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Partida cadastrada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou regras de negócio violadas")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PartidaResponseDto cadastrar(@RequestBody @Valid PartidaRequestDto dto) {
         return partidaService.salvar(dto);
     }
-    // GET /partidas
+    @Operation(summary = "Listar todas as partidas")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Lista de partidas retornada com sucesso")
+    })
     @GetMapping
     public List<PartidaResponseDto> listarTodas() {
         return partidaService.listarTodas();
     }
-    // GET /partidas/{id}
+    @Operation(summary = "Buscar partida por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Partida encontrada"),
+            @ApiResponse(responseCode = "404", description = "Partida não encontrada")
+    })
     @GetMapping("/{id}")
     public PartidaResponseDto buscarPorId(@PathVariable Long id) {
         return partidaService.buscarPorId(id);
     }
-    // PUT /partidas/{id}
+    @Operation(summary = "Atualizar uma partida existente")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Partida atualizada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Partida não encontrada"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos ou regras de negócio violadas")
+    })
     @PutMapping("/{id}")
     public PartidaResponseDto atualizar(@PathVariable Long id,
                                         @RequestBody @Valid PartidaRequestDto dto) {
         return partidaService.atualizar(id, dto);
     }
-    // DELETE /partidas/{id}
+    @Operation(summary = "Deletar partida por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Partida deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Partida não encontrada")
+    })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@PathVariable Long id) {
         partidaService.deletar(id);
     }
+    @Operation(summary = "Filtrar partidas com critérios avançados")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Partidas filtradas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição malformada")
+    })
     @PostMapping("/filtrar")
     public Page<PartidaResponseDto> filtrarPartidas(@RequestBody FiltroPartidaRequestDto filtro, Pageable pageable) {
         return partidaService.filtrarPartidas(filtro, pageable);

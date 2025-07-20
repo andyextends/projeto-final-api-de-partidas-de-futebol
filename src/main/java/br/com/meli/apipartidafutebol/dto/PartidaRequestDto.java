@@ -15,6 +15,18 @@ public class PartidaRequestDto {
     private LocalDateTime dataHora;
     private Integer placarMandante;
     private Integer placarVisitante;
+
+    public PartidaRequestDto(Long clubeMandanteId, Long clubeVisitanteId, LocalDateTime dataHora,
+                             Long estadioId, Integer placarMandante, Integer placarVisitante) {
+        this.clubeMandanteId = clubeMandanteId;
+        this.clubeVisitanteId = clubeVisitanteId;
+        this.dataHora = dataHora;
+        this.estadioId = estadioId;
+        this.placarMandante = placarMandante;
+        this.placarVisitante = placarVisitante;
+    }
+
+
     // Getters e Setters
     public Long getClubeMandanteId() {
         return clubeMandanteId;

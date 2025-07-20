@@ -33,42 +33,60 @@ public class Partida {
         this.placarVisitante = placarVisitante;
     }
     // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+
+
     public Clube getClubeMandante() {
         return clubeMandante;
     }
+
     public void setClubeMandante(Clube clubeMandante) {
         this.clubeMandante = clubeMandante;
     }
+
     public Clube getClubeVisitante() {
         return clubeVisitante;
     }
+
     public void setClubeVisitante(Clube clubeVisitante) {
         this.clubeVisitante = clubeVisitante;
     }
-    public Estadio getEstadio() {
-        return estadio;
-    }
-    public void setEstadio(Estadio estadio) {
-        this.estadio = estadio;
-    }
+
     public LocalDateTime getDataHora() {
         return dataHora;
     }
+
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
+
+    public Estadio getEstadio() {
+        return estadio;
+    }
+
+    public void setEstadio(Estadio estadio) {
+        this.estadio = estadio;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Integer getPlacarMandante() {
         return placarMandante;
     }
+
     public void setPlacarMandante(Integer placarMandante) {
         this.placarMandante = placarMandante;
     }
+
     public Integer getPlacarVisitante() {
         return placarVisitante;
     }
+
     public void setPlacarVisitante(Integer placarVisitante) {
         this.placarVisitante = placarVisitante;
     }

@@ -2,6 +2,8 @@ package br.com.meli.apipartidafutebol.dto;
 
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
+
 
 public class EstadioRequestDto {
     @NotBlank(message = "O nome do estádio é obrigatório.")
@@ -14,28 +16,46 @@ public class EstadioRequestDto {
     private Integer capacidade;
     @NotNull(message = "O campo 'ativo' é obrigatório.")
     private Boolean ativo;
+
+    public EstadioRequestDto(String nome, String cidade, Integer capacidade, Boolean ativo) {
+        this.nome = nome;
+        this.cidade = cidade;
+        this.capacidade = capacidade;
+        this.ativo = ativo;
+    }
+
+
     // Getters e Setters
+
+
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public String getCidade() {
         return cidade;
     }
+
     public void setCidade(String cidade) {
         this.cidade = cidade;
     }
+
     public Integer getCapacidade() {
         return capacidade;
     }
+
     public void setCapacidade(Integer capacidade) {
         this.capacidade = capacidade;
     }
+
     public Boolean getAtivo() {
         return ativo;
     }
+
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }

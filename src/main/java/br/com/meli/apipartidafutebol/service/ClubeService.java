@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -59,7 +61,8 @@ public class ClubeService {
         clube.setSiglaEstado(dto.getSiglaEstado());
         clube.setDataCriacao(dto.getDataCriacao());
         clube.setAtivo(dto.getAtivo());
-        return new ClubeResponseDto(clubeRepository.save(clube));
+        Clube clubeAtualizado = clubeRepository.save(clube);
+        return new ClubeResponseDto(clube);
     }
     @Transactional
     public void deletar(Long id) {
@@ -68,10 +71,11 @@ public class ClubeService {
         clubeRepository.delete(clube);
     }
     private void verificarClubeExistente(String nome, String siglaEstado) {
-        boolean existe = clubeRepository.findByNomeAndSiglaEstado(nome, siglaEstado).isPresent();
-        if (existe) {
+        Optional<Clube> existente = clubeRepository.findByNomeAndSiglaEstado(nome, siglaEstado);
+        if (existente.isPresent()) {
             throw new ClubesIguaisException("Já existe um clube com esse nome no mesmo estado.");
         }
+
 
     }
 

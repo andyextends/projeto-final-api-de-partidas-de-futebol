@@ -3,6 +3,8 @@ package br.com.meli.apipartidafutebol.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 
 @Entity
     @Table(name = "estadios")
@@ -26,7 +28,12 @@ import jakarta.persistence.*;
             this.capacidade = capacidade;
             this.ativo = ativo;
         }
-        // Getters e Setters
+
+    public Estadio(String maracanã, String rj, int i) {
+    }
+
+
+    // Getters e Setters
         public Long getId() {
             return id;
         }
@@ -54,6 +61,9 @@ import jakarta.persistence.*;
         public void setAtivo(Boolean ativo) {
             this.ativo = ativo;
         }
+
+    public void setId(Long id) {
     }
+}
 
 

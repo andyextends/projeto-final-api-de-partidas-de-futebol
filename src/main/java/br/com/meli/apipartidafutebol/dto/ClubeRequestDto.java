@@ -16,29 +16,44 @@ public class ClubeRequestDto {
     private LocalDate dataCriacao;
     @NotNull(message = "O campo 'ativo' é obrigatório.")
     private Boolean ativo;
-    // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
+
+    public ClubeRequestDto(Boolean ativo, LocalDate dataCriacao, String nome, String siglaEstado) {
+        this.ativo = ativo;
+        this.dataCriacao = dataCriacao;
         this.nome = nome;
+        this.siglaEstado = siglaEstado;
     }
+
     public String getSiglaEstado() {
         return siglaEstado;
     }
+
     public void setSiglaEstado(String siglaEstado) {
         this.siglaEstado = siglaEstado;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public LocalDate getDataCriacao() {
         return dataCriacao;
     }
+
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
+
     public Boolean getAtivo() {
         return ativo;
     }
+
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
 }
+

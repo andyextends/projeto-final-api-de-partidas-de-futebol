@@ -7,6 +7,7 @@ public class EstadioResponseDto {
     private String cidade;
     private Integer capacidade;
     private Boolean ativo;
+
     // Construtor completo
     public EstadioResponseDto(Long id, String nome, String cidade, Integer capacidade, Boolean ativo) {
         this.id = id;
@@ -41,4 +42,6 @@ public class EstadioResponseDto {
     public Boolean getAtivo() {
         return ativo;
     }
+
+
 }

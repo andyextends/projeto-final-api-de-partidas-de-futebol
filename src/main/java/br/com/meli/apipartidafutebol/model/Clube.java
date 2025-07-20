@@ -55,5 +55,7 @@ public class Clube {
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
     }
-
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

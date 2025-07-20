@@ -9,6 +9,9 @@ public class FiltroClubeRequestDto {
     private LocalDate dataCriacaoInicial;
     private LocalDate dataCriacaoFinal;
 
+    public FiltroClubeRequestDto(String clube, String sp, boolean b) {
+    }
+
     public Boolean getAtivo() {
         return ativo;
     }

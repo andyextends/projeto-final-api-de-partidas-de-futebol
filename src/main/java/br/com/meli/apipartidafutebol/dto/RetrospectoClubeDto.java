@@ -9,7 +9,9 @@ public class RetrospectoClubeDto {
     private int golsMarcados;
     private int golsSofridos;
     private int totalJogos;
-    public RetrospectoClubeDto(Long clubeId, String nomeClube, int vitorias, int empates, int derrotas, int golsMarcados, int golsSofridos) {
+
+    public RetrospectoClubeDto(Long clubeId, String nomeClube, int vitorias,
+                               int empates, int derrotas, int golsMarcados, int golsSofridos) {
         this.clubeId = clubeId;
         this.nomeClube = nomeClube;
         this.vitorias = vitorias;

@@ -27,8 +27,9 @@ public class ClubeResponseDto {
         this.ativo = clube.getAtivo();
     }
 
+    public ClubeResponseDto() {
 
-
+    }
 
 
     public Boolean getAtivo() {

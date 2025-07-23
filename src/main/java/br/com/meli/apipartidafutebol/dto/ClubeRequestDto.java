@@ -24,6 +24,17 @@ public class ClubeRequestDto {
         this.siglaEstado = siglaEstado;
     }
 
+    public ClubeRequestDto(String nome, String siglaEstado, LocalDate dataCriacao, Boolean ativo) {
+
+        this.nome = nome;
+        this.siglaEstado = siglaEstado;
+        this.dataCriacao = dataCriacao;
+        this.ativo = ativo;
+    }
+
+    public ClubeRequestDto() {
+    }
+
     public String getSiglaEstado() {
         return siglaEstado;
     }

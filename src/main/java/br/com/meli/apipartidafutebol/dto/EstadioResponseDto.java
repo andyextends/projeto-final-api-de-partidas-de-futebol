@@ -26,6 +26,11 @@ public class EstadioResponseDto {
                 estadio.getAtivo()
         );
     }
+
+    public EstadioResponseDto() {
+
+    }
+
     // Getters
     public Long getId() {
         return id;

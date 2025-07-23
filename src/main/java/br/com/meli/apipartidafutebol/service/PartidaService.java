@@ -28,6 +28,7 @@ public class PartidaService {
     private ClubeRepository clubeRepository;
     @Autowired
     private EstadioRepository estadioRepository;
+
     @Transactional
     public PartidaResponseDto salvar(PartidaRequestDto dto) {
         Clube mandante = buscarClube(dto.getClubeMandanteId(), "mandante");

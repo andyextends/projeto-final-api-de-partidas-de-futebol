@@ -13,6 +13,7 @@ import java.util.List;
 public class EstadioService {
     @Autowired
     private EstadioRepository estadioRepository;
+
     @Transactional
     public EstadioResponseDto salvar(EstadioRequestDto dto) {
         verificarEstadioDuplicado(dto.getNome(), dto.getCidade());

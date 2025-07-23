@@ -18,7 +18,13 @@ public class PartidaResponseDto {
         this.dataHora = partida.getDataHora();
         this.placarMandante = partida.getPlacarMandante();
         this.placarVisitante = partida.getPlacarVisitante();
+
     }
+
+    public PartidaResponseDto() {
+
+    }
+
     // Getters
     public Long getId() {
         return id;

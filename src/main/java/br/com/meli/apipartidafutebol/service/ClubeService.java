@@ -23,14 +23,14 @@ import org.springframework.data.domain.Pageable;
 
 @Service
 public class ClubeService {
+
     @Autowired
     private ClubeRepository clubeRepository;
-    private PartidaRepository partidaRepository;
 
-    public ClubeService(ClubeRepository clubeRepository, PartidaRepository partidaRepository) {
-        this.clubeRepository = clubeRepository;
-        this.partidaRepository = partidaRepository;
-    }
+   @Autowired
+   private PartidaRepository partidaRepository;
+
+
     @Transactional
     public ClubeResponseDto salvar(ClubeRequestDto dto) {
         verificarClubeExistente(dto.getNome(), dto.getSiglaEstado());
@@ -70,7 +70,7 @@ public class ClubeService {
                 .orElseThrow(() -> new ClubeNaoEncontradoException("Clube não encontrado com ID: " + id));
         clubeRepository.delete(clube);
     }
-    private void verificarClubeExistente(String nome, String siglaEstado) {
+    public void verificarClubeExistente(String nome, String siglaEstado) {
         Optional<Clube> existente = clubeRepository.findByNomeAndSiglaEstado(nome, siglaEstado);
         if (existente.isPresent()) {
             throw new ClubesIguaisException("Já existe um clube com esse nome no mesmo estado.");

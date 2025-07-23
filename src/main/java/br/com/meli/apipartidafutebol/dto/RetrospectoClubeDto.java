@@ -22,6 +22,10 @@ public class RetrospectoClubeDto {
         this.totalJogos = vitorias + empates + derrotas;
     }
 
+    public RetrospectoClubeDto() {
+
+    }
+
     public Long getClubeId() {
         return clubeId;
     }

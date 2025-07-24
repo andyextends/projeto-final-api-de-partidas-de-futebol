@@ -23,9 +23,9 @@ class EstadioServiceTest {
     }
     @Test
     void salvar_DeveRetornarEstadioResponseDto_QuandoSucesso() {
-        EstadioRequestDto dto = new EstadioRequestDto("Maracana", "RJ", 80000, true
+        EstadioRequestDto dto = new EstadioRequestDto("Maracana", "RJ", 80000, true,"00000000"
                 );
-        Estadio estadioSalvo = new Estadio("Maracana", "RJ", 80000, true);
+        Estadio estadioSalvo = new Estadio("Maracana", "RJ", 80000, true,"00000000");
         estadioSalvo.setId(1L); // :marca_de_verificação_branca: necessário para o DTO
         when(estadioRepository.save(any(Estadio.class))).thenReturn(estadioSalvo);
         EstadioResponseDto response = estadioService.salvar(dto);
@@ -38,8 +38,8 @@ class EstadioServiceTest {
     @Test
     void listarTodos_DeveRetornarListaDeEstadios() {
         List<Estadio> estadios = List.of(
-                new Estadio("Maracanã", "RJ", 80000, true),
-                new Estadio("Morumbi", "SP", 67000, true)
+                new Estadio("Maracanã", "RJ", 80000, true,"00000000"),
+                new Estadio("Morumbi", "SP", 67000, true,"00000000")
         );
         when(estadioRepository.findAll()).thenReturn(estadios);
         List<EstadioResponseDto> resultado = estadioService.listarTodos();
@@ -50,7 +50,7 @@ class EstadioServiceTest {
     }
     @Test
     void buscarPorId_DeveRetornarEstadioResponseDto_QuandoEncontrado() {
-        Estadio estadio = new Estadio("Maracanã", "RJ", 80000, true);
+        Estadio estadio = new Estadio("Maracanã", "RJ", 80000, true,"00000000");
         estadio.setId(1L);
         when(estadioRepository.findById(1L)).thenReturn(Optional.of(estadio));
         EstadioResponseDto response = estadioService.buscarPorId(1L);
@@ -65,8 +65,8 @@ class EstadioServiceTest {
     @Test
     void atualizar_DeveRetornarEstadioAtualizado() {
         Long id = 1L;
-        EstadioRequestDto dto = new EstadioRequestDto("Novo Maracanã", "RJ", 75000, true);
-        Estadio estadioExistente = new Estadio("Maracanã", "RJ", 80000, true);
+        EstadioRequestDto dto = new EstadioRequestDto("Novo Maracanã", "RJ", 75000, true,"00000000");
+        Estadio estadioExistente = new Estadio("Maracanã", "RJ", 80000, true,"00000000");
         estadioExistente.setId(id);
         when(estadioRepository.findById(id)).thenReturn(Optional.of(estadioExistente));
         when(estadioRepository.save(any(Estadio.class))).thenAnswer(invocation -> {
@@ -84,7 +84,7 @@ class EstadioServiceTest {
     void deletar_DeveRemoverEstadio_QuandoIdExistente() {
         Long id = 1L;
         Estadio estadio = new Estadio("Maracanã", "RJ", 80000,
-                true);
+                true,"00000000");
         when(estadioRepository.findById(id)).thenReturn(Optional.of(estadio));
         doNothing().when(estadioRepository).delete(estadio);
         estadioService.deletar(id);

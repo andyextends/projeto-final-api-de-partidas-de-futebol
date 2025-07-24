@@ -26,7 +26,7 @@ class EstadioControllerTest {
 
     @Test
     void cadastrar() throws Exception {
-        EstadioRequestDto request = new EstadioRequestDto("Arena Teste", "São Paulo", 50000, true);
+        EstadioRequestDto request = new EstadioRequestDto("Arena Teste", "São Paulo", 50000, true,"00000000");
         EstadioResponseDto response = new EstadioResponseDto();
         Mockito.when(estadioService.salvar(any())).thenReturn(response);
         mockMvc.perform(post("/estadios")
@@ -51,7 +51,7 @@ class EstadioControllerTest {
 
     @Test
     void atualizar() throws Exception {
-        EstadioRequestDto request = new EstadioRequestDto("Novo Nome", "Rio de Janeiro", 60000, true);
+        EstadioRequestDto request = new EstadioRequestDto("Novo Nome", "Rio de Janeiro", 60000, true,"00000000");
         EstadioResponseDto response = new EstadioResponseDto();
         Mockito.when(estadioService.atualizar(Mockito.eq(1L), any())).thenReturn(response);
         mockMvc.perform(put("/estadios/1")

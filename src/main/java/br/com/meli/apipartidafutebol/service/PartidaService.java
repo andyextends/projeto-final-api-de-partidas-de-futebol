@@ -10,7 +10,9 @@ import br.com.meli.apipartidafutebol.repository.EstadioRepository;
 import br.com.meli.apipartidafutebol.repository.PartidaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import br.com.meli.apipartidafutebol.dto.FiltroPartidaRequestDto;
 import br.com.meli.apipartidafutebol.specification.PartidaSpecification;
+
 
 @Service
 public class PartidaService {
@@ -41,6 +44,7 @@ public class PartidaService {
         );
         return new PartidaResponseDto(partidaRepository.save(partida));
     }
+
     @Transactional
     public PartidaResponseDto atualizar(Long id, PartidaRequestDto dto) {
         Partida partida = partidaRepository.findById(id)
@@ -57,32 +61,38 @@ public class PartidaService {
         partida.setPlacarVisitante(dto.getPlacarVisitante());
         return new PartidaResponseDto(partidaRepository.save(partida));
     }
+
     public List<PartidaResponseDto> listarTodas() {
         return partidaRepository.findAll()
                 .stream()
                 .map(PartidaResponseDto::new)
                 .collect(Collectors.toList());
     }
+
     public PartidaResponseDto buscarPorId(Long id) {
         Partida partida = partidaRepository.findById(id)
                 .orElseThrow(() -> new PartidaNaoEncontradaException("Partida não encontrada."));
         return new PartidaResponseDto(partida);
     }
+
     @Transactional
     public void deletar(Long id) {
         Partida partida = partidaRepository.findById(id)
                 .orElseThrow(() -> new PartidaNaoEncontradaException("Partida não encontrada."));
         partidaRepository.delete(partida);
     }
+
     // ===== Métodos auxiliares =====
     private Clube buscarClube(Long id, String tipo) {
         return clubeRepository.findById(id)
                 .orElseThrow(() -> new ClubeNaoEncontradoException("Clube " + tipo + " não encontrado."));
     }
+
     private Estadio buscarEstadio(Long id) {
         return estadioRepository.findById(id)
                 .orElseThrow(() -> new EstadioNaoEncontradoException("Estádio não encontrado."));
     }
+
     private void validarRegrasDeNegocio(Clube mandante, Clube visitante, Estadio estadio, LocalDateTime dataHora) {
         validarClubesDiferentes(mandante, visitante);
         validarClubesAtivos(mandante, visitante);
@@ -90,22 +100,26 @@ public class PartidaService {
         validarEstadioDisponivel(estadio, dataHora);
         validarIntervaloEntrePartidas(mandante, visitante, dataHora);
     }
+
     private void validarClubesDiferentes(Clube mandante, Clube visitante) {
         if (mandante.getId().equals(visitante.getId())) {
             throw new ClubesIguaisException("Clube mandante e visitante devem ser diferentes.");
         }
     }
+
     private void validarClubesAtivos(Clube mandante, Clube visitante) {
         if (!mandante.getAtivo() || !visitante.getAtivo()) {
             throw new ClubesInativosException("Ambos os clubes devem estar ativos.");
         }
     }
+
     private void validarDataPartidaVsCriacaoClubes(Clube mandante, Clube visitante, LocalDateTime dataHora) {
         if (dataHora.isBefore(mandante.getDataCriacao().atStartOfDay()) ||
                 dataHora.isBefore(visitante.getDataCriacao().atStartOfDay())) {
             throw new DataInvalidaException("A data da partida não pode ser anterior à criação dos clubes.");
         }
     }
+
     private void validarEstadioDisponivel(Estadio estadio, LocalDateTime dataHora) {
         boolean ocupado = partidaRepository.findAll().stream()
                 .anyMatch(p -> p.getEstadio().getId().equals(estadio.getId())
@@ -114,6 +128,7 @@ public class PartidaService {
             throw new EstadioOcupadoException("Já existe uma partida agendada neste estádio neste dia.");
         }
     }
+
     private void validarIntervaloEntrePartidas(Clube mandante, Clube visitante, LocalDateTime dataHora) {
         boolean intervaloInvalido = partidaRepository.findAll().stream()
                 .anyMatch(p -> (
@@ -128,15 +143,9 @@ public class PartidaService {
     }
 
     public Page<PartidaResponseDto> filtrarPartidas(FiltroPartidaRequestDto filtro, Pageable pageable) {
-        return partidaRepository.findAll(PartidaSpecification.filtrar(filtro), pageable)
-                .map(PartidaResponseDto::new);
+        Specification<Partida> specification = PartidaSpecification.filtrar(filtro);
+        return partidaRepository.findAll(specification, pageable).map(PartidaResponseDto::new);
     }
-
-
-
-
-
-
 
 }
 

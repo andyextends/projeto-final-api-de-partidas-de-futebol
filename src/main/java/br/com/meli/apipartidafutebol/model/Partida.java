@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "partidas")
 public class Partida {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +23,9 @@ public class Partida {
     private Integer placarMandante;
     private Integer placarVisitante;
     // Construtores
-    public Partida() {}
+    public Partida() {
+
+    }
     public Partida(Clube clubeMandante, Clube clubeVisitante, Estadio estadio,
                    LocalDateTime dataHora, Integer placarMandante, Integer placarVisitante) {
         this.clubeMandante = clubeMandante;

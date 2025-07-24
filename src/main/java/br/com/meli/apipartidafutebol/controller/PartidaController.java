@@ -5,6 +5,7 @@ import br.com.meli.apipartidafutebol.dto.PartidaRequestDto;
 import br.com.meli.apipartidafutebol.dto.PartidaResponseDto;
 import br.com.meli.apipartidafutebol.service.PartidaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Tag(name = "Partida", description = "Operações relacionadas as partidas de futebol")
@@ -76,7 +78,10 @@ public class PartidaController {
             @ApiResponse(responseCode = "400", description = "Requisição malformada")
     })
     @PostMapping("/filtrar")
-    public Page<PartidaResponseDto> filtrarPartidas(@RequestBody FiltroPartidaRequestDto filtro, Pageable pageable) {
+    public Page<PartidaResponseDto> filtrarPartidas(@RequestBody FiltroPartidaRequestDto filtro,
+                                                    @Parameter(hidden = true) Pageable pageable) {
+
         return partidaService.filtrarPartidas(filtro, pageable);
     }
+
 }

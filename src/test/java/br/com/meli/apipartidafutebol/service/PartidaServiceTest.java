@@ -41,7 +41,7 @@ class PartidaServiceTest {
         Clube visitante = new Clube("Clube B", "RJ",
                 LocalDate.of(2000, 1, 1), true);
         visitante.setId(2L);
-        Estadio estadio = new Estadio("Arena", "SP", 50000, true);
+        Estadio estadio = new Estadio("Arena", "SP", 50000, true,"00000000");
         estadio.setId(3L);
         Partida partida = new Partida(mandante, visitante, estadio, dataHora, 1, 2);
         partida.setId(10L);
@@ -69,7 +69,7 @@ class PartidaServiceTest {
         mandante.setId(1L);
         Clube visitante = new Clube("Clube B", "RJ", LocalDate.of(2000, 1, 1), true);
         visitante.setId(2L);
-        Estadio estadio = new Estadio("Arena", "SP", 50000, true);
+        Estadio estadio = new Estadio("Arena", "SP", 50000, true,"00000000");
         estadio.setId(3L);
         Partida partida = new Partida(
                 mandante, visitante, estadio,
@@ -91,7 +91,7 @@ class PartidaServiceTest {
         mandante.setId(1L);
         Clube visitante = new Clube("Clube B", "RJ", LocalDate.of(2000, 1, 1), true);
         visitante.setId(2L);
-        Estadio estadio = new Estadio("Arena", "SP", 50000, true);
+        Estadio estadio = new Estadio("Arena", "SP", 50000, true,"00000000");
         estadio.setId(3L);
         Partida partida1 = new Partida(mandante, visitante, estadio,
                 LocalDateTime.of(2025, 7, 20, 18, 0), 2, 2);
@@ -128,7 +128,7 @@ class PartidaServiceTest {
         Clube visitante = new Clube("Clube B", "RJ",
                 LocalDate.of(2000, 1, 1), true);
         visitante.setId(2L);
-        Estadio estadio = new Estadio("Arena", "SP", 50000, true);
+        Estadio estadio = new Estadio("Arena", "SP", 50000, true,"00000000");
         estadio.setId(3L);
         Partida partida = new Partida(mandante, visitante, estadio,
                 dataHora.minusDays(1), 0, 0);

@@ -48,11 +48,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponseDto(HttpStatus.NOT_FOUND.name(), ex.getMessage()));
     }
-    // Fallback genérico
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponseDto("ERRO_INTERNO", "Erro inesperado: " + ex.getMessage()));
+    }
+    @ExceptionHandler(CepNaoEncontradoException.class)
+    public ResponseEntity<ErrorResponseDto> handleCepNaoEncontrado(CepNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponseDto(HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
     }
 }
 

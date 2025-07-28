@@ -39,6 +39,7 @@ class ClubeControllerTest {
                 .andExpect(jsonPath("$.nome").value("Time Teste"))
                 .andExpect(jsonPath("$.siglaEstado").value("SP"))
                 .andExpect(jsonPath("$.ativo").value(true));
+
     }
     @Test
     void deveListarTodosClubes() throws Exception {

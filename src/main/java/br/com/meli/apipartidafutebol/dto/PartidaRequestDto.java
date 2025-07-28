@@ -1,5 +1,6 @@
 package br.com.meli.apipartidafutebol.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class PartidaRequestDto {
     @NotNull(message = "O ID do estádio é obrigatório.")
     private Long estadioId;
     @NotNull(message = "A data e hora da partida são obrigatórias.")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @JsonProperty("dataHora")
     private LocalDateTime dataHora;
     private Integer placarMandante;
@@ -26,6 +28,9 @@ public class PartidaRequestDto {
         this.placarVisitante = placarVisitante;
     }
 
+    public PartidaRequestDto() {
+
+    }
 
     // Getters e Setters
     public Long getClubeMandanteId() {

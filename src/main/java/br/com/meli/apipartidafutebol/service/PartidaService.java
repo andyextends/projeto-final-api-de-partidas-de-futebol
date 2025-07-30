@@ -1,6 +1,5 @@
 package br.com.meli.apipartidafutebol.service;
-import br.com.meli.apipartidafutebol.dto.PartidaRequestDto;
-import br.com.meli.apipartidafutebol.dto.PartidaResponseDto;
+import br.com.meli.apipartidafutebol.dto.*;
 import br.com.meli.apipartidafutebol.exception.*;
 import br.com.meli.apipartidafutebol.model.Clube;
 import br.com.meli.apipartidafutebol.model.Estadio;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import br.com.meli.apipartidafutebol.dto.FiltroPartidaRequestDto;
 import br.com.meli.apipartidafutebol.specification.PartidaSpecification;
 
 
@@ -91,6 +89,13 @@ public class PartidaService {
     private Estadio buscarEstadio(Long id) {
         return estadioRepository.findById(id)
                 .orElseThrow(() -> new EstadioNaoEncontradoException("Estádio não encontrado."));
+    }
+
+    public void validarRegrasDeNegocio(PartidaRequestDto dto) {
+        Clube mandante = buscarClube(dto.getClubeMandanteId(), "mandante");
+        Clube visitante = buscarClube(dto.getClubeVisitanteId(), "visitante");
+        Estadio estadio = buscarEstadio(dto.getEstadioId());
+        validarRegrasDeNegocio(mandante, visitante, estadio, dto.getDataHora());
     }
 
     private void validarRegrasDeNegocio(Clube mandante, Clube visitante, Estadio estadio, LocalDateTime dataHora) {

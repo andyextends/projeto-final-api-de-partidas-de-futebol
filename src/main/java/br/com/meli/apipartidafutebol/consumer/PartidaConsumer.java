@@ -40,7 +40,7 @@ public class PartidaConsumer {
     }
     @KafkaListener(
             topics = "${spring.kafka.topic.partida}.DLT",
-            groupId = "grupo-partida-dlt"
+            groupId = " grupo-partida-dlt "
     )
     public void reprocessarMensagemDLT(String mensagemJson) {
         System.err.println(" Reprocessando mensagem da DLT: " + mensagemJson);

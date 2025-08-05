@@ -1,7 +1,14 @@
 package br.com.meli.apipartidafutebol.dto;
 
 import br.com.meli.apipartidafutebol.model.Partida;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PartidaResponseDto {
     private Long id;
     private String clubeMandante;
@@ -10,6 +17,7 @@ public class PartidaResponseDto {
     private LocalDateTime dataHora;
     private Integer placarMandante;
     private Integer placarVisitante;
+
     public PartidaResponseDto(Partida partida) {
         this.id = partida.getId();
         this.clubeMandante = partida.getClubeMandante().getNome();
@@ -21,30 +29,5 @@ public class PartidaResponseDto {
 
     }
 
-    public PartidaResponseDto() {
 
-    }
-
-    // Getters
-    public Long getId() {
-        return id;
-    }
-    public String getClubeMandante() {
-        return clubeMandante;
-    }
-    public String getClubeVisitante() {
-        return clubeVisitante;
-    }
-    public String getEstadio() {
-        return estadio;
-    }
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-    public Integer getPlacarMandante() {
-        return placarMandante;
-    }
-    public Integer getPlacarVisitante() {
-        return placarVisitante;
-    }
 }

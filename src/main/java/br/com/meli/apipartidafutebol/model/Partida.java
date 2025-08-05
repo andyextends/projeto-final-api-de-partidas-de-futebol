@@ -1,7 +1,15 @@
 package br.com.meli.apipartidafutebol.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "partidas")
 public class Partida {
@@ -22,10 +30,7 @@ public class Partida {
     private LocalDateTime dataHora;
     private Integer placarMandante;
     private Integer placarVisitante;
-    // Construtores
-    public Partida() {
 
-    }
     public Partida(Clube clubeMandante, Clube clubeVisitante, Estadio estadio,
                    LocalDateTime dataHora, Integer placarMandante, Integer placarVisitante) {
         this.clubeMandante = clubeMandante;
@@ -35,62 +40,5 @@ public class Partida {
         this.placarMandante = placarMandante;
         this.placarVisitante = placarVisitante;
     }
-    // Getters e Setters
 
-
-    public Clube getClubeMandante() {
-        return clubeMandante;
-    }
-
-    public void setClubeMandante(Clube clubeMandante) {
-        this.clubeMandante = clubeMandante;
-    }
-
-    public Clube getClubeVisitante() {
-        return clubeVisitante;
-    }
-
-    public void setClubeVisitante(Clube clubeVisitante) {
-        this.clubeVisitante = clubeVisitante;
-    }
-
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
-
-    public Estadio getEstadio() {
-        return estadio;
-    }
-
-    public void setEstadio(Estadio estadio) {
-        this.estadio = estadio;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getPlacarMandante() {
-        return placarMandante;
-    }
-
-    public void setPlacarMandante(Integer placarMandante) {
-        this.placarMandante = placarMandante;
-    }
-
-    public Integer getPlacarVisitante() {
-        return placarVisitante;
-    }
-
-    public void setPlacarVisitante(Integer placarVisitante) {
-        this.placarVisitante = placarVisitante;
-    }
 }

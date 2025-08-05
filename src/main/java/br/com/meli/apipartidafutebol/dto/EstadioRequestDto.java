@@ -1,5 +1,12 @@
 package br.com.meli.apipartidafutebol.dto;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EstadioRequestDto {
     @NotBlank(message = "O nome do estádio é obrigatório.")
     @Size(min = 2, message = "O nome deve ter pelo menos 2 caracteres.")
@@ -15,47 +22,4 @@ public class EstadioRequestDto {
     @Pattern(regexp = "\\d{8}", message = "O CEP deve conter exatamente 8 dígitos numéricos.")
     private String cep;
 
-
-    // Construtor
-    public EstadioRequestDto(String nome, String cidade, Integer capacidade, Boolean ativo, String cep) {
-        this.nome = nome;
-        this.cidade = cidade;
-        this.capacidade = capacidade;
-        this.ativo = ativo;
-        this.cep = cep;
-    }
-    public EstadioRequestDto() {
-
-    }
-    // Getters e Setters
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getCidade() {
-        return cidade;
-    }
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-    public Integer getCapacidade() {
-        return capacidade;
-    }
-    public void setCapacidade(Integer capacidade) {
-        this.capacidade = capacidade;
-    }
-    public Boolean getAtivo() {
-        return ativo;
-    }
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-    public String getCep() {
-        return cep;
-    }
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
 }

@@ -1,9 +1,15 @@
 package br.com.meli.apipartidafutebol.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "clubes")
 public class Clube {
@@ -18,8 +24,7 @@ public class Clube {
     private LocalDate dataCriacao;
     @Column(nullable = false)
     private Boolean ativo;
-    // Construtor padrão
-    public Clube() {}
+
     // Construtor completo
     public Clube(String nome, String siglaEstado, LocalDate dataCriacao, Boolean ativo) {
         this.nome = nome;
@@ -27,35 +32,5 @@ public class Clube {
         this.dataCriacao = dataCriacao;
         this.ativo = ativo;
     }
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getSiglaEstado() {
-        return siglaEstado;
-    }
-    public void setSiglaEstado(String siglaEstado) {
-        this.siglaEstado = siglaEstado;
-    }
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-    public Boolean getAtivo() {
-        return ativo;
-    }
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 }

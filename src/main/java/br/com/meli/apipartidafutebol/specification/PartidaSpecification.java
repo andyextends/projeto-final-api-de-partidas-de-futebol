@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PartidaSpecification {
+
     public static Specification<Partida> filtrar(FiltroPartidaRequestDto filtro) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -51,5 +52,5 @@ public class PartidaSpecification {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
-}
 
+}

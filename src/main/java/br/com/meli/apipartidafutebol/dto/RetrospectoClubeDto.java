@@ -1,5 +1,12 @@
 package br.com.meli.apipartidafutebol.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RetrospectoClubeDto {
     private Long clubeId;
     private String nomeClube;
@@ -22,73 +29,6 @@ public class RetrospectoClubeDto {
         this.totalJogos = vitorias + empates + derrotas;
     }
 
-    public RetrospectoClubeDto() {
-
-    }
-
-    public Long getClubeId() {
-        return clubeId;
-    }
-
-    public void setClubeId(Long clubeId) {
-        this.clubeId = clubeId;
-    }
-
-    public int getDerrotas() {
-        return derrotas;
-    }
-
-    public void setDerrotas(int derrotas) {
-        this.derrotas = derrotas;
-    }
-
-    public int getEmpates() {
-        return empates;
-    }
-
-    public void setEmpates(int empates) {
-        this.empates = empates;
-    }
-
-    public int getGolsMarcados() {
-        return golsMarcados;
-    }
-
-    public void setGolsMarcados(int golsMarcados) {
-        this.golsMarcados = golsMarcados;
-    }
-
-    public int getGolsSofridos() {
-        return golsSofridos;
-    }
-
-    public void setGolsSofridos(int golsSofridos) {
-        this.golsSofridos = golsSofridos;
-    }
-
-    public String getNomeClube() {
-        return nomeClube;
-    }
-
-    public void setNomeClube(String nomeClube) {
-        this.nomeClube = nomeClube;
-    }
-
-    public int getTotalJogos() {
-        return totalJogos;
-    }
-
-    public void setTotalJogos(int totalJogos) {
-        this.totalJogos = totalJogos;
-    }
-
-    public int getVitorias() {
-        return vitorias;
-    }
-
-    public void setVitorias(int vitorias) {
-        this.vitorias = vitorias;
-    }
 }
 
 

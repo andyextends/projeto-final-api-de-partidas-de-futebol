@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+
 @Service
 public class EstadioService {
     @Autowired
@@ -73,10 +74,5 @@ public class EstadioService {
             throw new EstadioIndisponivelException("Já existe um estádio com esse nome na mesma cidade.");
         }
     }
+
 }
-
-
-
-
-
-

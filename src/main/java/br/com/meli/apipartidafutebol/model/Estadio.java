@@ -1,7 +1,13 @@
 package br.com.meli.apipartidafutebol.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "estadios")
 public class Estadio {
@@ -25,10 +31,6 @@ public class Estadio {
     @Column(length = 2)
     private String uf;
 
-    // Construtores
-    public Estadio() {
-    }
-
     public Estadio(String nome, String cidade, Integer capacidade, Boolean ativo,String cep) {
         this.nome = nome;
         this.cidade = cidade;
@@ -37,54 +39,6 @@ public class Estadio {
         this.cep = cep;
     }
 
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public Integer getCapacidade() {
-        return capacidade;
-    }
-
-    public void setCapacidade(Integer capacidade) {
-        this.capacidade = capacidade;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
 }
 
 

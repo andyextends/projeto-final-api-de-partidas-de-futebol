@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import br.com.meli.apipartidafutebol.specification.PartidaSpecification;
-
 
 @Service
 public class PartidaService {
@@ -153,12 +151,3 @@ public class PartidaService {
     }
 
 }
-
-
-
-
-
-
-
-
-

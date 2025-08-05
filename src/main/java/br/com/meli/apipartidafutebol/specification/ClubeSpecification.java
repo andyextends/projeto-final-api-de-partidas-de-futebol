@@ -5,7 +5,9 @@ import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+
 public class ClubeSpecification {
+
     public static Specification<Clube> comFiltros(FiltroClubeRequestDto filtro) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -38,10 +40,5 @@ public class ClubeSpecification {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
+
 }
-
-
-
-
-
-

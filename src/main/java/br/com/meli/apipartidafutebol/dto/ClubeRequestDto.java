@@ -1,9 +1,15 @@
 package br.com.meli.apipartidafutebol.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClubeRequestDto {
     @NotBlank(message = "O nome do clube é obrigatório.")
     @Size(min = 2, message = "O nome deve ter pelo menos 2 letras.")
@@ -17,54 +23,6 @@ public class ClubeRequestDto {
     @NotNull(message = "O campo 'ativo' é obrigatório.")
     private Boolean ativo;
 
-    public ClubeRequestDto(Boolean ativo, LocalDate dataCriacao, String nome, String siglaEstado) {
-        this.ativo = ativo;
-        this.dataCriacao = dataCriacao;
-        this.nome = nome;
-        this.siglaEstado = siglaEstado;
-    }
 
-    public ClubeRequestDto(String nome, String siglaEstado, LocalDate dataCriacao, Boolean ativo) {
-
-        this.nome = nome;
-        this.siglaEstado = siglaEstado;
-        this.dataCriacao = dataCriacao;
-        this.ativo = ativo;
-    }
-
-    public ClubeRequestDto() {
-    }
-
-    public String getSiglaEstado() {
-        return siglaEstado;
-    }
-
-    public void setSiglaEstado(String siglaEstado) {
-        this.siglaEstado = siglaEstado;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
 }
 

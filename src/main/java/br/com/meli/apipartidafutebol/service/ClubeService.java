@@ -16,10 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 
 @Service
 public class ClubeService {
@@ -102,30 +100,4 @@ public class ClubeService {
         return new RetrospectoClubeDto(clube.getId(), clube.getNome(), vitorias, empates, derrotas, golsFeitos, golsSofridos);
     }
 
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

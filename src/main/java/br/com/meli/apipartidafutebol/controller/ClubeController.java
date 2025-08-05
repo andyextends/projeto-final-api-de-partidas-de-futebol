@@ -1,10 +1,9 @@
 package br.com.meli.apipartidafutebol.controller;
-
 import br.com.meli.apipartidafutebol.dto.ClubeRequestDto;
 import br.com.meli.apipartidafutebol.dto.ClubeResponseDto;
+import br.com.meli.apipartidafutebol.dto.FiltroClubeRequestDto;
 import br.com.meli.apipartidafutebol.dto.RetrospectoClubeDto;
 import br.com.meli.apipartidafutebol.service.ClubeService;
-import br.com.meli.apipartidafutebol.dto.FiltroClubeRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,24 +12,18 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.net.URI;
 import java.util.List;
-
 @Tag(name = "Clube", description = "Operações relacionadas aos clubes de futebol")
 @RestController
-@RequestMapping("clubes")
+@RequestMapping("clube")
 public class ClubeController {
-
     private final ClubeService clubeService;
-
     public ClubeController(ClubeService clubeService) {
         this.clubeService = clubeService;
     }
-
-
     @Operation(summary = "Cadastrar um novo clube")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Clube cadastrado com sucesso"),
@@ -38,15 +31,15 @@ public class ClubeController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos")
     })
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ClubeResponseDto cadastrar(@RequestBody @Valid ClubeRequestDto clubeRequestDto) {
-        return clubeService.salvar(clubeRequestDto);
+    public ResponseEntity<ClubeResponseDto> cadastrar(@RequestBody @Valid ClubeRequestDto clubeRequestDto) {
+        ClubeResponseDto response = clubeService.salvar(clubeRequestDto);
+        return ResponseEntity.created(URI.create("/clube/" + response.getId())).body(response);
     }
     @Operation(summary = "Listar todos os clubes")
     @ApiResponse(responseCode = "200", description = "Lista de clubes retornada com sucesso")
     @GetMapping
-    public List<ClubeResponseDto> listarTodosClubes() {
-        return clubeService.listarTodosClubes();
+    public ResponseEntity<List<ClubeResponseDto>> listarTodosClubes() {
+        return ResponseEntity.ok(clubeService.listarTodosClubes());
     }
     @Operation(summary = "Buscar clube por ID")
     @ApiResponses({
@@ -54,8 +47,8 @@ public class ClubeController {
             @ApiResponse(responseCode = "404", description = "Clube não encontrado")
     })
     @GetMapping("/{id}")
-    public ClubeResponseDto buscarPorId(@PathVariable Long id) {
-        return clubeService.buscarPorId(id);
+    public ResponseEntity<ClubeResponseDto> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(clubeService.buscarPorId(id));
     }
     @Operation(summary = "Atualizar clube existente")
     @ApiResponses({
@@ -63,9 +56,11 @@ public class ClubeController {
             @ApiResponse(responseCode = "404", description = "Clube não encontrado")
     })
     @PutMapping("/{id}")
-    public ClubeResponseDto atualizar(@PathVariable Long id,
-                                      @RequestBody @Valid ClubeRequestDto dto) {
-        return clubeService.atualizar(id, dto);
+    public ResponseEntity<ClubeResponseDto> atualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid ClubeRequestDto dto
+    ) {
+        return ResponseEntity.ok(clubeService.atualizar(id, dto));
     }
     @Operation(summary = "Deletar clube por ID")
     @ApiResponses({
@@ -73,9 +68,9 @@ public class ClubeController {
             @ApiResponse(responseCode = "404", description = "Clube não encontrado")
     })
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletar(@PathVariable Long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         clubeService.deletar(id);
+        return ResponseEntity.noContent().build();
     }
     @Operation(summary = "Filtrar clubes com paginação")
     @ApiResponses({
@@ -86,8 +81,7 @@ public class ClubeController {
             @RequestBody FiltroClubeRequestDto filtro,
             @PageableDefault(size = 10, sort = "nome") Pageable pageable
     ) {
-        Page<ClubeResponseDto> resultado = clubeService.filtrarClubes(filtro, pageable);
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.ok(clubeService.filtrarClubes(filtro, pageable));
     }
     @Operation(summary = "Obter retrospecto do clube")
     @ApiResponses({

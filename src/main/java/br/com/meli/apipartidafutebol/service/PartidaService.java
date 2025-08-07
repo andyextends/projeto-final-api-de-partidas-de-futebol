@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -148,6 +150,12 @@ public class PartidaService {
     public Page<PartidaResponseDto> filtrarPartidas(FiltroPartidaRequestDto filtro, Pageable pageable) {
         Specification<Partida> specification = PartidaSpecification.filtrar(filtro);
         return partidaRepository.findAll(specification, pageable).map(PartidaResponseDto::new);
+    }
+
+    public List<Partida> buscarPartidasAgendadas() {
+        return partidaRepository.findAll().stream()
+                .filter(partida -> partida.getDataHora().isAfter(LocalDate.now().atStartOfDay()))
+                .collect(Collectors.toList());
     }
 
 }

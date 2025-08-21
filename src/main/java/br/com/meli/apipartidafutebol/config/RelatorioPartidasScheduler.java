@@ -25,16 +25,16 @@ public class RelatorioPartidasScheduler {
     public void enviarRelatorioPartidasAgendadas() {
         List<PartidaResponseDto> partidas = partidaService.listarTodas();
         if (partidas.isEmpty()) {
-            System.out.println(":caixa_de_correio_vazia: Nenhuma partida cadastrada no momento.");
+            System.out.println(" Nenhuma partida cadastrada no momento.");
             return;
         }
         String corpoEmail = gerarCorpoRelatorio(partidas);
-        String assunto = ":gráfico_de_barras: Relatório Diário de Partidas Cadastradas";
+        String assunto = " Relatório Diário de Partidas Cadastradas";
         try {
             emailService.enviarRelatorioPartidas(destinatario, assunto, corpoEmail);
-            System.out.println(":marca_de_verificação_branca: Relatório de partidas enviado com sucesso.");
+            System.out.println(" Relatório de partidas enviado com sucesso.");
         } catch (Exception e) {
-            System.err.println(":x_vermelho: Erro ao enviar relatório de partidas: " + e.getMessage());
+            System.err.println(" Erro ao enviar relatório de partidas: " + e.getMessage());
         }
     }
     private String gerarCorpoRelatorio(List<PartidaResponseDto> partidas) {

@@ -12,6 +12,6 @@ public class EmailController {
     @GetMapping("/enviar-relatorio")
     public ResponseEntity<String> testarEnvioManual() {
         scheduler.enviarRelatorioPartidasAgendadas();
-        return ResponseEntity.ok(":marca_de_verificação_branca: Relatório de partidas enviado manualmente.");
+        return ResponseEntity.ok(" Relatório de partidas enviado manualmente com sucesso.");
     }
 }

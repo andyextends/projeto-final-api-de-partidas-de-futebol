@@ -10,18 +10,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class CadastrarEstadioService implements CadastrarEstadioUseCase {
     private final EstadioRepositoryPort estadioRepo;
     private final EnderecoPorCepPort enderecoPort;
+
     public CadastrarEstadioService(EstadioRepositoryPort estadioRepo, EnderecoPorCepPort enderecoPort) {
         this.estadioRepo = estadioRepo;
         this.enderecoPort = enderecoPort;
     }
+
     @Transactional
     @Override
     public Estadio executar(Estadio estadio) {
-        // Valida e preenche cidade via CEP
         var end = enderecoPort.buscar(estadio.getCep());
         if (end != null) {
-            estadio.setCidade(end.cidade());
+            estadio.setCidade(normalizar(end.cidade()));
+        }
+        if (estadioRepo.existsByNomeAndCidade(estadio.getNome(), estadio.getCidade())) {
+            throw new IllegalArgumentException("Já existe estádio com esse nome nessa cidade.");
         }
         return estadioRepo.save(estadio);
+    }
+
+    private String normalizar(String s) {
+        return s == null ? null : s.trim().toUpperCase();
     }
 }

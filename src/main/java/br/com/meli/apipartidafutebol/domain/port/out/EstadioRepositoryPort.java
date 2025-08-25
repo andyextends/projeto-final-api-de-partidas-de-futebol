@@ -9,5 +9,5 @@ public interface EstadioRepositoryPort {
     Estadio save(Estadio estadio);
     Optional<Estadio> findById(Long id);
     List<Estadio> findAll();
-    boolean existsByNome(String nome);
+    boolean existsByNomeAndCidade(String nome, String cidade);
 }

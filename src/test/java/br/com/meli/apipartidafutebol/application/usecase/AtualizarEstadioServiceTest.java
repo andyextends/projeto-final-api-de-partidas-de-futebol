@@ -74,4 +74,23 @@ class AtualizarEstadioServiceTest {
         verifyNoMoreInteractions(repo);
         verifyNoInteractions(enderecoPort);
     }
+    @Test
+    void deveLancar_QuandoCepInvalido() {
+        // given: estádio existente
+        var existente = new Estadio("ARENA X", "SAO PAULO", 50000, true, "01001000");
+        existente.setId(1L);
+        when(repo.findById(1L)).thenReturn(Optional.of(existente));
+        // e um DTO com CEP inválido
+        var dto = new EstadioRequestDto("Arena Y", "Qualquer", 60000, true, "00000000");
+        // o port de CEP falha (adapter faria essa validação e lançaria)
+        when(enderecoPort.buscar("00000000"))
+                .thenThrow(new IllegalArgumentException("CEP inválido ou não encontrado."));
+        // when/then
+        assertThrows(IllegalArgumentException.class, () -> service.executar(1L, dto));
+        // nunca deve tentar persistir
+        verify(repo, never()).save(any());
+        // e o buscar do repo foi chamado
+        verify(repo).findById(1L);
+    }
 }
+

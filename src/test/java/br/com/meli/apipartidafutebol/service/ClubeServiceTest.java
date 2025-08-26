@@ -35,7 +35,7 @@ class ClubeServiceTest {
     @Test
     void salvar_DeveRetornarClubeResponseDto_QuandoSucesso() {
         LocalDate dataCriacao = LocalDate.of(2000, 1, 1);
-        ClubeRequestDto dto = new ClubeRequestDto(true, dataCriacao, "Clube A", "sp");
+        ClubeRequestDto dto = new ClubeRequestDto("Clube A", "sp",dataCriacao, true);
         when(clubeRepository.findByNomeAndSiglaEstado("Clube A", "sp"))
                 .thenReturn(Optional.empty());
         Clube clubeSalvo = new Clube("Clube A", "sp", dataCriacao, true);
@@ -52,8 +52,8 @@ class ClubeServiceTest {
     @Test
     void salvar_DeveLancarExcecao_QuandoClubeDuplicado() {
 
-        ClubeRequestDto dto = new ClubeRequestDto(true,
-                LocalDate.of(2000,1,1),"Clube A","SP");
+        ClubeRequestDto dto = new ClubeRequestDto("Clube A","SP",
+                LocalDate.of(2000,1,1),true);
         Clube clubeExistente = new Clube("Clube A", "SP",
                 LocalDate.of(2000, 1, 1), true);
         when(clubeRepository.findByNomeAndSiglaEstado("Clube A", "SP")).
@@ -91,7 +91,7 @@ class ClubeServiceTest {
     void atualizar_DeveRetornarClubeAtualizado() {
         Long id = 1L;
         ClubeRequestDto dto = new ClubeRequestDto(
-                true, LocalDate.of(2000,1,1),"Clube A", "MG");
+                "Clube A" ,"MG", LocalDate.of(2000,1,1), true);
         Clube clubeExistente = new Clube(
                 "Clube Antigo", "SP",
                 LocalDate.of(2000, 1, 1), true
@@ -141,7 +141,7 @@ class ClubeServiceTest {
     }
     @Test
     void filtrarClubes_DeveRetornarPaginaComClubes() {
-        FiltroClubeRequestDto filtro = new FiltroClubeRequestDto("Clube A", "SP", true);
+        FiltroClubeRequestDto filtro = new FiltroClubeRequestDto();
         Pageable paginacao = PageRequest.of(0, 10);
         Clube clube = new Clube("Clube A", "SP", LocalDate.of(2000, 1, 1), true);
         List<Clube> clubes = List.of(clube);

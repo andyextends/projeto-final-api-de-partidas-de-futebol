@@ -19,10 +19,12 @@ public class CadastrarEstadioService implements CadastrarEstadioUseCase {
     @Transactional
     @Override
     public Estadio executar(Estadio estadio) {
+        // normalizações
+        estadio.setNome(normalizar(estadio.getNome()));
+        estadio.setCep(onlyDigits(estadio.getCep()));
         var end = enderecoPort.buscar(estadio.getCep());
-        if (end != null) {
-            estadio.setCidade(normalizar(end.cidade()));
-        }
+        estadio.setCidade(normalizar(end.getCidade()));
+        estadio.setUf(normalizar(end.getUf()));
         if (estadioRepo.existsByNomeAndCidade(estadio.getNome(), estadio.getCidade())) {
             throw new IllegalArgumentException("Já existe estádio com esse nome nessa cidade.");
         }
@@ -31,5 +33,9 @@ public class CadastrarEstadioService implements CadastrarEstadioUseCase {
 
     private String normalizar(String s) {
         return s == null ? null : s.trim().toUpperCase();
+    }
+
+    private String onlyDigits(String s) {
+        return s == null ? null : s.replaceAll("[^0-9]", "");
     }
 }

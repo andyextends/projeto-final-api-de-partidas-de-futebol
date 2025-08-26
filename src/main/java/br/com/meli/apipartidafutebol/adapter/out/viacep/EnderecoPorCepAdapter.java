@@ -17,12 +17,21 @@ public class EnderecoPorCepAdapter implements EnderecoPorCepPort {
     }
     @Override
     public Endereco buscar(String cep) {
-        EnderecoResponse r = client.buscarEnderecoPorCep(cep);
-        String cidade = r.getLocalidade();
-        String uf = r.getUf();
-        if (cidade == null || uf == null) {
+        // só dígitos
+        String clean = cep == null ? "" : cep.replaceAll("[^0-9]", "");
+        EnderecoResponse r = client.buscarEnderecoPorCep(clean);
+        if (r == null || r.getLocalidade() == null || r.getLocalidade().isBlank()
+                || r.getUf() == null || r.getUf().isBlank()) {
             throw new IllegalArgumentException("CEP inválido ou não encontrado.");
         }
-        return new Endereco(r.getLogradouro(), cidade, uf);
+        // usa o CEP de entrada (clean) em vez de r.getCep()
+        return new Endereco(
+                r.getLogradouro(),
+                r.getBairro(),
+                r.getLocalidade(),
+                r.getUf(),
+                clean
+        );
     }
+
 }

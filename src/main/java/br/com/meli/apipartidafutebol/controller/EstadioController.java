@@ -72,7 +72,7 @@ public class EstadioController {
     @PutMapping("/{id}")
     public ResponseEntity<EstadioResponseDto> atualizar(@PathVariable Long id,
                                                         @RequestBody @Valid EstadioRequestDto dto) {
-        var atualizado = atualizar.executar(id, EstadioWebMapper.toDomain(dto));
+        var atualizado = atualizar.executar(id, dto);
         return ResponseEntity.ok(EstadioWebMapper.toDto(atualizado));
     }
     @Operation(summary = "Deletar estádio por ID")

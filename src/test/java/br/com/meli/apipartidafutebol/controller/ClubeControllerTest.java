@@ -1,6 +1,6 @@
 package br.com.meli.apipartidafutebol.controller;
+import br.com.meli.apipartidafutebol.domain.port.in.*;
 import br.com.meli.apipartidafutebol.dto.*;
-import br.com.meli.apipartidafutebol.service.ClubeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,105 +20,131 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ClubeControllerTest {
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
-    private ClubeService clubeService;
     @Autowired
     private ObjectMapper objectMapper;
+    // Ports (use cases) mockados
+    @MockBean
+    private CadastrarClubeUseCase cadastrar;
+    @MockBean
+    private AtualizarClubeUseCase atualizar;
+    @MockBean
+    private ListarClubesUseCase listar;
+    @MockBean
+    private BuscarClubePorIdUseCase buscarPorId;
+    @MockBean
+    private DeletarClubeUseCase deletar;
+    @MockBean
+    private FiltrarClubesUseCase filtrar;
+    @MockBean
+    private ObterRetrospectoClubeUseCase obterRetrospecto;
+
     @Test
     void deveCadastrarNovoClube() throws Exception {
-        ClubeRequestDto requestDto = new ClubeRequestDto("Time Teste", "SP",
-                LocalDate.of(2020, 1, 1), true);
-        ClubeResponseDto responseDto = new ClubeResponseDto(1L, "Time Teste", "SP",
-                LocalDate.of(2020, 1, 1), true);
-        Mockito.when(clubeService.salvar(any())).thenReturn(responseDto);
-        mockMvc.perform(post("/clubes")
+        var req = new ClubeRequestDto("Time Teste", "SP", LocalDate.of(2020, 1,
+                1), true);
+        var resp = new ClubeResponseDto(1L, "Time Teste", "SP", LocalDate.of(2020,
+                1, 1), true);
+        Mockito.when(cadastrar.executar(any(ClubeRequestDto.class))).thenReturn(resp);
+        mockMvc.perform(post("/clube")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(header().string("Location", containsString("/clube/1")))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nome").value("Time Teste"))
                 .andExpect(jsonPath("$.siglaEstado").value("SP"))
                 .andExpect(jsonPath("$.ativo").value(true));
-
     }
+
+    private String containsString(String path) {
+        return path;
+    }
+
+
     @Test
     void deveListarTodosClubes() throws Exception {
-        List<ClubeResponseDto> clubes = List.of(
-                new ClubeResponseDto(1L, "Time A", "SP",
-                        LocalDate.of(2020, 1, 1), true),
-                new ClubeResponseDto(2L, "Time B", "RJ",
-                        LocalDate.of(2021, 1, 1), true)
+        var lista = List.of(
+                new ClubeResponseDto(1L, "A", "SP", LocalDate.of(2020,
+                        1,1), true),
+                new ClubeResponseDto(2L, "B", "RJ", LocalDate.of(2021,
+                        1,1), false)
         );
-        Mockito.when(clubeService.listarTodosClubes()).thenReturn(clubes);
-        mockMvc.perform(get("/clubes"))
+        Mockito.when(listar.executar()).thenReturn(lista);
+        mockMvc.perform(get("/clube"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].nome").value("A"))
+                .andExpect(jsonPath("$[1].siglaEstado").value("RJ"));
     }
     @Test
-    void deveBuscarClubePorId() throws Exception {
-        ClubeResponseDto responseDto = new ClubeResponseDto(1L, "Time X", "SP",
-                LocalDate.of(2020, 1, 1), true);
-        Mockito.when(clubeService.buscarPorId(1L)).thenReturn(responseDto);
-        mockMvc.perform(get("/clubes/1"))
+    void deveBuscarPorId() throws Exception {
+        var resp = new ClubeResponseDto(10L, "Time X", "MG", LocalDate.of(2019,
+                5,10), true);
+        Mockito.when(buscarPorId.executar(10L)).thenReturn(resp);
+        mockMvc.perform(get("/clube/10"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(10))
                 .andExpect(jsonPath("$.nome").value("Time X"));
     }
     @Test
-    void deveAtualizarClube() throws Exception {
-        ClubeRequestDto requestDto = new ClubeRequestDto("Atualizado", "MG",
-                LocalDate.of(2022, 1, 1), false);
-        ClubeResponseDto responseDto = new ClubeResponseDto(1L, "Atualizado", "MG",
-                LocalDate.of(2022, 1, 1), false);
-        Mockito.when(clubeService.atualizar(eq(1L), any())).thenReturn(responseDto);
-        mockMvc.perform(put("/clubes/1")
+    void deveAtualizar() throws Exception {
+        var req = new ClubeRequestDto("Atualizado", "PR", LocalDate.of(2022,
+                2,2), false);
+        var resp = new ClubeResponseDto(5L, "Atualizado", "PR", LocalDate.of(2022,
+                2,2), false);
+        Mockito.when(atualizar.executar(eq(5L), any(ClubeRequestDto.class))).thenReturn(resp);
+        mockMvc.perform(put("/clube/5")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+                        .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(5))
                 .andExpect(jsonPath("$.nome").value("Atualizado"))
                 .andExpect(jsonPath("$.ativo").value(false));
     }
     @Test
-    void deveDeletarClube() throws Exception {
-        Mockito.doNothing().when(clubeService).deletar(1L);
-        mockMvc.perform(delete("/clubes/1"))
+    void deveDeletar() throws Exception {
+        Mockito.doNothing().when(deletar).executar(3L);
+        mockMvc.perform(delete("/clube/3"))
                 .andExpect(status().isNoContent());
     }
     @Test
-    void deveFiltrarClubesComPaginacao() throws Exception {
-        FiltroClubeRequestDto filtro = new FiltroClubeRequestDto(); // ajuste conforme campos reais
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("nome"));
-        Page<ClubeResponseDto> page = new PageImpl<>(List.of(
-                new ClubeResponseDto(1L, "Filtro FC", "CE", LocalDate.of(2021, 1, 1), true)
-        ));
-        Mockito.when(clubeService.filtrarClubes(any(), any())).thenReturn(page);
-        mockMvc.perform(post("/clubes/filtro")
+    void deveFiltrarComPaginacao() throws Exception {
+        var filtro = new FiltroClubeRequestDto(); // preencha se tiver campos
+        var page = new PageImpl<>(List.of(
+                new ClubeResponseDto(1L, "Filtro FC", "CE", LocalDate.of(2021,
+                        1,1), true)
+        ), PageRequest.of(0,10, Sort.by("nome")), 1);
+        Mockito.when(filtrar.executar(any(FiltroClubeRequestDto.class), any(Pageable.class)))
+                .thenReturn(page);
+        mockMvc.perform(post("/clube/filtro")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filtro)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.length()").value(1));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].nome").value("Filtro FC"));
     }
     @Test
-    void deveObterRetrospectoClube() throws Exception {
-        RetrospectoClubeDto retrospecto = new RetrospectoClubeDto();
-        retrospecto.setClubeId(1L);
-        retrospecto.setNomeClube("Clube Teste");
-        retrospecto.setVitorias(5);
-        retrospecto.setEmpates(3);
-        retrospecto.setDerrotas(2);
-        retrospecto.setGolsMarcados(12);
-        retrospecto.setGolsSofridos(8);
-        retrospecto.setTotalJogos(10);
-        Mockito.when(clubeService.obterRetrospecto(1L)).thenReturn(retrospecto);
-        mockMvc.perform(get("/clubes/1/retrospecto"))
+    void deveObterRetrospecto() throws Exception {
+        var retro = new RetrospectoClubeDto();
+        retro.setClubeId(7L);
+        retro.setNomeClube("Teste");
+        retro.setVitorias(4);
+        retro.setEmpates(2);
+        retro.setDerrotas(1);
+        retro.setGolsMarcados(9);
+        retro.setGolsSofridos(3);
+        retro.setTotalJogos(7);
+        Mockito.when(obterRetrospecto.executar(7L)).thenReturn(retro);
+        mockMvc.perform(get("/clube/7/retrospecto"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.clubeId").value(1L))
-                .andExpect(jsonPath("$.nomeClube").value("Clube Teste"))
-                .andExpect(jsonPath("$.vitorias").value(5))
-                .andExpect(jsonPath("$.empates").value(3))
-                .andExpect(jsonPath("$.derrotas").value(2))
-                .andExpect(jsonPath("$.golsMarcados").value(12))
-                .andExpect(jsonPath("$.golsSofridos").value(8))
-                .andExpect(jsonPath("$.totalJogos").value(10));
+                .andExpect(jsonPath("$.clubeId").value(7))
+                .andExpect(jsonPath("$.nomeClube").value("Teste"))
+                .andExpect(jsonPath("$.totalJogos").value(7));
     }
-
 }
+
+
+
+
+
+

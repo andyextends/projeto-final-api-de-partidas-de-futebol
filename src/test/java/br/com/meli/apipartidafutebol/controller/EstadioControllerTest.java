@@ -1,7 +1,7 @@
 package br.com.meli.apipartidafutebol.controller;
+import br.com.meli.apipartidafutebol.domain.port.in.*;
 import br.com.meli.apipartidafutebol.dto.EstadioRequestDto;
-import br.com.meli.apipartidafutebol.dto.EstadioResponseDto;
-import br.com.meli.apipartidafutebol.service.EstadioService;
+import br.com.meli.apipartidafutebol.model.Estadio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,58 +12,65 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @WebMvcTest(EstadioController.class)
 class EstadioControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private EstadioService estadioService;
-    @Autowired
-    private ObjectMapper objectMapper;
-
+    @Autowired MockMvc mockMvc;
+    @Autowired ObjectMapper objectMapper;
+    // mocks dos use cases (ports de entrada)
+    @MockBean CadastrarEstadioUseCase cadastrar;
+    @MockBean AtualizarEstadioUseCase atualizar;
+    @MockBean ListarEstadiosUseCase listar;
+    @MockBean BuscarEstadioPorIdUseCase buscarPorId;
+    @MockBean DeletarEstadioUseCase deletar;
+    private Estadio novoEstadio() {
+        Estadio e = new Estadio();
+        e.setId(1L);
+        e.setNome("Arena Teste");
+        e.setCidade("SÃO PAULO");
+        e.setCapacidade(50000);
+        e.setAtivo(true);
+        e.setCep("01001000");
+        return e;
+    }
     @Test
-    void cadastrar() throws Exception {
-        EstadioRequestDto request = new EstadioRequestDto("Arena Teste", "São Paulo", 50000, true,"00000000");
-        EstadioResponseDto response = new EstadioResponseDto();
-        Mockito.when(estadioService.salvar(any())).thenReturn(response);
-        mockMvc.perform(post("/estadios")
+    void cadastrar_deveRetornar201() throws Exception {
+        var req = new EstadioRequestDto("Arena Teste", "São Paulo", 50000, true, "01001000");
+        Mockito.when(cadastrar.executar(any(Estadio.class))).thenReturn(novoEstadio());
+        mockMvc.perform(post("/estadio")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/estadio/1"));
     }
-
     @Test
-    void listarTodos() throws Exception {
-        Mockito.when(estadioService.listarTodos()).thenReturn(List.of(new EstadioResponseDto()));
-        mockMvc.perform(get("/estadios"))
+    void listar_deveRetornar200() throws Exception {
+        Mockito.when(listar.executar()).thenReturn(List.of(novoEstadio()));
+        mockMvc.perform(get("/estadio"))
                 .andExpect(status().isOk());
     }
-
     @Test
-    void buscarPorId() throws Exception {
-        Mockito.when(estadioService.buscarPorId(1L)).thenReturn(new EstadioResponseDto());
-        mockMvc.perform(get("/estadios/1"))
+    void buscarPorId_deveRetornar200() throws Exception {
+        Mockito.when(buscarPorId.executar(1L)).thenReturn(novoEstadio());
+        mockMvc.perform(get("/estadio/1"))
                 .andExpect(status().isOk());
     }
-
     @Test
-    void atualizar() throws Exception {
-        EstadioRequestDto request = new EstadioRequestDto("Novo Nome", "Rio de Janeiro", 60000, true,"00000000");
-        EstadioResponseDto response = new EstadioResponseDto();
-        Mockito.when(estadioService.atualizar(Mockito.eq(1L), any())).thenReturn(response);
-        mockMvc.perform(put("/estadios/1")
+    void atualizar_deveRetornar200() throws Exception {
+        var req = new EstadioRequestDto("Arena X", "São Paulo", 60000, true, "01001000");
+        Mockito.when(atualizar.executar(eq(1L), any(EstadioRequestDto.class))).thenReturn(novoEstadio());
+        mockMvc.perform(put("/estadio/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isOk());
     }
-
     @Test
-    void deletar() throws Exception {
-        doNothing().when(estadioService).deletar(1L);
-        mockMvc.perform(delete("/estadios/1"))
+    void deletar_deveRetornar204() throws Exception {
+        doNothing().when(deletar).executar(1L);
+        mockMvc.perform(delete("/estadio/1"))
                 .andExpect(status().isNoContent());
     }
 }

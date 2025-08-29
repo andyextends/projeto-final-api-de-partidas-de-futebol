@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "estadios")
+@Table(name = "estadio",uniqueConstraints = @UniqueConstraint(name= "uk_estadio_nome_cidade",
+        columnNames = {"nome", "cidade"}))
+
 public class Estadio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
